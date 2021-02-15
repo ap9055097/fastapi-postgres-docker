@@ -1,0 +1,57 @@
+version: '3.7'
+
+services:
+  api:
+    build: .
+    # command: bash -c "alembic -c /app/alembic.ini upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload"
+    command: bash -c "uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload"
+    volumes:
+      # - .:/usr/src/api
+      - ./app:/app/app
+      # - ..:/app
+    ports:
+      - 8000:8080
+    depends_on:
+      - db
+    links:
+      - db:db
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  db:
+    container_name: postgres_container
+    image: postgres:12.0-alpine
+    environment:
+      POSTGRES_USER: siametrics
+      POSTGRES_PASSWORD: siametrics
+      PGDATA: /data/postgres
+    volumes:
+      - postgres_data:/data/postgres
+    networks:
+      - postgres
+    expose: 
+      - 5432
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+    
+
+volumes:
+  postgres_data:
+  pgadmin:
+  
+networks:
+  postgres:
+    driver: bridge
