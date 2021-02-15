@@ -1,5 +1,5 @@
 # fastapi-postgres-docker
-Simple
-FastAPI-Alembic-SQLAlchemy
-Postgres
-Docker Compose
+Simple. 
+FastAPI-Alembic-SQLAlchemy. 
+Postgres. 
+DockerCompose
